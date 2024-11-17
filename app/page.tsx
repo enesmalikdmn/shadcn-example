@@ -1,101 +1,381 @@
-import Image from "next/image";
+"use client"
 
-export default function Home() {
+import * as React from "react"
+import {
+  ArrowUpRight,
+  AudioWaveform,
+  BadgeCheck,
+  Bell,
+  Blocks,
+  CalendarIcon,
+  Check,
+  ChevronDown,
+  ChevronRight,
+  ChevronsUpDown,
+  Command,
+  CreditCard,
+  Home,
+  Inbox,
+  Link,
+  LogOut,
+  MessageCircleQuestion,
+  MoreHorizontal,
+  Plus,
+  Search,
+  Settings2,
+  Sparkles,
+  StarOff,
+  Trash2,
+  User,
+  Briefcase,
+  type LucideIcon,
+} from "lucide-react"
+
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
+import { Breadcrumb, BreadcrumbItem, BreadcrumbList, BreadcrumbPage } from "@/components/ui/breadcrumb"
+import { Calendar } from "@/components/ui/calendar"
+import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible"
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuGroup,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+  DropdownMenuShortcut,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu"
+import { Separator } from "@/components/ui/separator"
+import {
+  Sidebar,
+  SidebarContent,
+  SidebarFooter,
+  SidebarGroup,
+  SidebarGroupContent,
+  SidebarGroupLabel,
+  SidebarHeader,
+  SidebarInset,
+  SidebarMenu,
+  SidebarMenuAction,
+  SidebarMenuBadge,
+  SidebarMenuButton,
+  SidebarMenuItem,
+  SidebarMenuSub,
+  SidebarMenuSubButton,
+  SidebarMenuSubItem,
+  SidebarProvider,
+  SidebarRail,
+  SidebarSeparator,
+  SidebarTrigger,
+  useSidebar,
+} from "@/components/ui/sidebar"
+
+// This is sample data for the left sidebar.
+const sidebarLeftData = {
+  navMain: [
+    {
+      title: "About",
+      url: "#about",
+      icon: User,
+    },
+    {
+      title: "My Works",
+      url: "#my-works",
+      icon: Briefcase,
+    },
+  ],
+}
+
+// This is sample data for the right sidebar.
+const sidebarRightData = {
+  user: {
+    name: "Enes Malik Duman",
+    email: "enes@example.com",
+    avatar: "/avatars/enes.jpg",
+  },
+  calendars: [
+    {
+      name: "My Calendars",
+      items: ["Personal", "Work", "Family"],
+    },
+    {
+      name: "Other",
+      items: ["Reminders", "Deadlines"],
+    },
+  ],
+}
+
+function About() {
+  return <div className="p-4">About content goes here.</div>
+}
+
+function MyWorks() {
+  return <div className="p-4">My Works content goes here.</div>
+}
+
+export default function Page() {
+  const [activeSection, setActiveSection] = React.useState("About")
+  const [selectedCalendarItems, setSelectedCalendarItems] = React.useState<string[]>([])
+
+  const handleSectionChange = (section: string) => {
+    setActiveSection(section)
+  }
+
+  const handleCalendarItemToggle = (item: string) => {    
+    setSelectedCalendarItems((prev) =>
+      prev.includes(item) ? prev.filter((i) => i !== item) : [...prev, item]
+    )
+  }
+
   return (
-    <div className="grid grid-rows-[20px_1fr_20px] items-center justify-items-center min-h-screen p-8 pb-20 gap-16 sm:p-20 font-[family-name:var(--font-geist-sans)]">
-      <main className="flex flex-col gap-8 row-start-2 items-center sm:items-start">
-        <Image
-          className="dark:invert"
-          src="https://nextjs.org/icons/next.svg"
-          alt="Next.js logo"
-          width={180}
-          height={38}
-          priority
-        />
-        <ol className="list-inside list-decimal text-sm text-center sm:text-left font-[family-name:var(--font-geist-mono)]">
-          <li className="mb-2">
-            Get started by editing{" "}
-            <code className="bg-black/[.05] dark:bg-white/[.06] px-1 py-0.5 rounded font-semibold">
-              app/page.tsx
-            </code>
-            .
-          </li>
-          <li>Save and see your changes instantly.</li>
-        </ol>
-
-        <div className="flex gap-4 items-center flex-col sm:flex-row">
-          <a
-            className="rounded-full border border-solid border-transparent transition-colors flex items-center justify-center bg-foreground text-background gap-2 hover:bg-[#383838] dark:hover:bg-[#ccc] text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className="dark:invert"
-              src="https://nextjs.org/icons/vercel.svg"
-              alt="Vercel logomark"
-              width={20}
-              height={20}
-            />
-            Deploy now
-          </a>
-          <a
-            className="rounded-full border border-solid border-black/[.08] dark:border-white/[.145] transition-colors flex items-center justify-center hover:bg-[#f2f2f2] dark:hover:bg-[#1a1a1a] hover:border-transparent text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5 sm:min-w-44"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Read our docs
-          </a>
+    <SidebarProvider>
+      <SidebarLeft onSectionChange={handleSectionChange} />
+      <SidebarInset>
+        <header className="sticky top-0 flex h-14 shrink-0 items-center gap-2 bg-background">
+          <div className="flex flex-1 items-center gap-2 px-3">
+            <SidebarTrigger />
+            <Separator orientation="vertical" className="mr-2 h-4" />
+            <Breadcrumb>
+              <BreadcrumbList>
+                <BreadcrumbItem>
+                  <BreadcrumbPage className="line-clamp-1">{activeSection}</BreadcrumbPage>
+                </BreadcrumbItem>
+              </BreadcrumbList>
+            </Breadcrumb>
+          </div>
+        </header>
+        <div className="flex flex-1 flex-col gap-4 p-4">
+          {activeSection === "About" && <About />}
+          {activeSection === "My Works" && <MyWorks />}
         </div>
-      </main>
-      <footer className="row-start-3 flex gap-6 flex-wrap items-center justify-center">
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="https://nextjs.org/icons/file.svg"
-            alt="File icon"
-            width={16}
-            height={16}
-          />
-          Learn
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="https://nextjs.org/icons/window.svg"
-            alt="Window icon"
-            width={16}
-            height={16}
-          />
-          Examples
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="https://nextjs.org/icons/globe.svg"
-            alt="Globe icon"
-            width={16}
-            height={16}
-          />
-          Go to nextjs.org →
-        </a>
-      </footer>
-    </div>
-  );
+      </SidebarInset>
+      <SidebarRight
+        onCalendarItemToggle={handleCalendarItemToggle}
+        selectedCalendarItems={selectedCalendarItems}
+      />
+    </SidebarProvider>
+  )
+}
+
+function SidebarLeft({
+  onSectionChange,
+  ...props
+}: React.ComponentProps<typeof Sidebar> & { onSectionChange: (section: string) => void }) {
+  return (
+    <Sidebar className="border-r-0" {...props}>
+      <SidebarHeader>
+        <SidebarMenu>
+          <SidebarMenuItem>
+            <SidebarMenuButton className="w-full px-2">
+              <span className="font-semibold">Enes Malik Duman</span>
+            </SidebarMenuButton>
+          </SidebarMenuItem>
+        </SidebarMenu>
+      </SidebarHeader>
+      <SidebarContent>
+        <NavMain items={sidebarLeftData.navMain} onSectionChange={onSectionChange} />
+      </SidebarContent>
+      <SidebarRail />
+    </Sidebar>
+  )
+}
+
+function SidebarRight({
+  onCalendarItemToggle,
+  selectedCalendarItems,
+  ...props
+}: React.ComponentProps<typeof Sidebar> & {
+  onCalendarItemToggle: (item: string) => void
+  selectedCalendarItems: string[]
+}) {
+  return (
+    <Sidebar collapsible="none" className="sticky hidden lg:flex top-0 h-svh border-l" {...props}>
+      <SidebarHeader className="h-16 border-b border-sidebar-border">
+        <NavUser user={sidebarRightData.user} />
+      </SidebarHeader>
+      <SidebarContent>
+        <DatePicker />
+        <SidebarSeparator className="mx-0" />
+        <Calendars
+          calendars={sidebarRightData.calendars}
+          onCalendarItemToggle={onCalendarItemToggle}
+          selectedCalendarItems={selectedCalendarItems}
+        />
+      </SidebarContent>
+      <SidebarFooter>
+        <SidebarMenu>
+          <SidebarMenuItem>
+            <SidebarMenuButton>
+              <Plus />
+              <span onClick={() => console.log(selectedCalendarItems)} >New Calendar</span>
+            </SidebarMenuButton>
+          </SidebarMenuItem>
+        </SidebarMenu>
+      </SidebarFooter>
+    </Sidebar>
+  )
+}
+
+function Calendars({
+  calendars,
+  onCalendarItemToggle,
+  selectedCalendarItems,
+}: {
+  calendars: {
+    name: string
+    items: string[]
+  }[]
+  onCalendarItemToggle: (item: string) => void
+  selectedCalendarItems: string[]
+}) {
+  return (
+    <>
+      {calendars.map((calendar, index) => (
+        <React.Fragment key={calendar.name}>
+          <SidebarGroup key={calendar.name} className="py-0">
+            <Collapsible defaultOpen={index === 0} className="group/collapsible">
+              <SidebarGroupLabel
+                asChild
+                className="group/label w-full text-sm text-sidebar-foreground hover:bg-sidebar-accent hover:text-sidebar-accent-foreground"
+              >
+                <CollapsibleTrigger>
+                  {calendar.name}{" "}
+                  <ChevronRight className="ml-auto transition-transform group-data-[state=open]/collapsible:rotate-90" />
+                </CollapsibleTrigger>
+              </SidebarGroupLabel>
+              <CollapsibleContent>
+                <SidebarGroupContent>
+                  <SidebarMenu>
+                    {calendar.items.map((item) => (
+                      <SidebarMenuItem key={item}>
+                        <SidebarMenuButton onClick={() => onCalendarItemToggle(item)}>
+                          <div
+                            data-active={selectedCalendarItems.includes(item)}
+                            className="group/calendar-item flex aspect-square size-4 shrink-0 items-center justify-center rounded-sm border border-sidebar-border text-sidebar-primary-foreground data-[active=true]:border-sidebar-primary data-[active=true]:bg-sidebar-primary"
+                          >
+                            <Check className="hidden size-3 group-data-[active=true]/calendar-item:block" />
+                          </div>
+                          {item}
+                        </SidebarMenuButton>
+                      </SidebarMenuItem>
+                    ))}
+                  </SidebarMenu>
+                </SidebarGroupContent>
+              </CollapsibleContent>
+            </Collapsible>
+          </SidebarGroup>
+          <SidebarSeparator className="mx-0" />
+        </React.Fragment>
+      ))}
+    </>
+  )
+}
+
+function DatePicker() {
+  return (
+    <SidebarGroup className="px-0">
+      <SidebarGroupContent>
+        <Calendar className="[&_[role=gridcell].bg-accent]:bg-sidebar-primary [&_[role=gridcell].bg-accent]:text-sidebar-primary-foreground [&_[role=gridcell]]:w-[33px]" />
+      </SidebarGroupContent>
+    </SidebarGroup>
+  )
+}
+
+function NavMain({
+  items,
+  onSectionChange,
+}: {
+  items: {
+    title: string
+    url: string
+    icon: LucideIcon
+  }[]
+  onSectionChange: (section: string) => void
+}) {
+  return (
+    <SidebarMenu>
+      {items.map((item) => (
+        <SidebarMenuItem key={item.title}>
+          <SidebarMenuButton asChild onClick={() => onSectionChange(item.title)}>
+            <a href={item.url}>
+              <item.icon />
+              <span>{item.title}</span>
+            </a>
+          </SidebarMenuButton>
+        </SidebarMenuItem>
+      ))}
+    </SidebarMenu>
+  )
+}
+
+function NavUser({
+  user,
+}: {
+  user: {
+    name: string
+    email: string
+    avatar: string
+  }
+}) {
+  const { isMobile } = useSidebar()
+
+  return (
+    <SidebarMenu>
+      <SidebarMenuItem>
+        <DropdownMenu>
+          <DropdownMenuTrigger asChild>
+            <SidebarMenuButton
+              size="lg"
+              className="data-[state=open]:bg-sidebar-accent data-[state=open]:text-sidebar-accent-foreground"
+            >
+              <Avatar className="h-8 w-8 rounded-lg">
+                <AvatarImage src={user.avatar} alt={user.name} />
+                <AvatarFallback className="rounded-lg">EMD</AvatarFallback>
+              </Avatar>
+              <div className="grid flex-1 text-left text-sm leading-tight">
+                <span className="truncate font-semibold">{user.name}</span>
+                <span className="truncate text-xs">{user.email}</span>
+              </div>
+              <ChevronsUpDown className="ml-auto size-4" />
+            </SidebarMenuButton>
+          </DropdownMenuTrigger>
+          <DropdownMenuContent
+            className="w-[--radix-dropdown-menu-trigger-width] min-w-56 rounded-lg"
+            side={isMobile ? "bottom" : "right"}
+            align="start"
+            sideOffset={4}
+          >
+            <DropdownMenuLabel className="p-0 font-normal">
+              <div className="flex items-center gap-2 px-1 py-1.5 text-left text-sm">
+                <Avatar className="h-8 w-8 rounded-lg">
+                  <AvatarImage src={user.avatar} alt={user.name} />
+                  <AvatarFallback className="rounded-lg">EMD</AvatarFallback>
+                </Avatar>
+                <div className="grid flex-1 text-left text-sm leading-tight">
+                  <span className="truncate font-semibold">{user.name}</span>
+                  <span className="truncate text-xs">{user.email}</span>
+                </div>
+              </div>
+            </DropdownMenuLabel>
+            <DropdownMenuSeparator />
+            <DropdownMenuGroup>
+              <DropdownMenuItem>
+                <BadgeCheck />
+                Account
+              </DropdownMenuItem>
+              <DropdownMenuItem>
+                <Bell />
+                Notifications
+              </DropdownMenuItem>
+            </DropdownMenuGroup>
+            <DropdownMenuSeparator />
+            <DropdownMenuItem>
+              <LogOut />
+              Log out
+            </DropdownMenuItem>
+          </DropdownMenuContent>
+        </DropdownMenu>
+      </SidebarMenuItem>
+    </SidebarMenu>
+  )
 }
